@@ -13,12 +13,16 @@ import (
 	"github.com/gorcon/rcon"
 )
 
+// Client represents a client to a Palword RCON server.
 type Client struct {
 	address  string
 	password string
 	conn     *rcon.Conn
 }
 
+// NewClient creates a new [Client] with the given address and password. Note that this function does not attempt to
+// connect to the RCON server, so the password is not validated at this time. Instead, the connection is established
+// on-demand when a method on the [Client] is called.
 func NewClient(address string, password string) *Client {
 	client := &Client{
 		address:  address,
@@ -58,6 +62,8 @@ func (r *Client) executeWithRetry(command string, retry bool) (string, error) {
 	return strings.TrimSpace(response), err
 }
 
+// KickPlayer instructs the server to ban the player with the given Steam ID from the server. The player must be online
+// to be banned.
 func (r *Client) BanPlayer(steamID uint64) error {
 	response, err := r.executeWithRetry(fmt.Sprintf("BanPlayer %d", steamID), true)
 	if err != nil {
@@ -68,6 +74,7 @@ func (r *Client) BanPlayer(steamID uint64) error {
 	return nil
 }
 
+// Broadcast displays the given message to all online players.
 func (r *Client) Broadcast(message string) error {
 	response, err := r.executeWithRetry(fmt.Sprintf("Broadcast %s", message), true)
 	if err != nil {
@@ -78,6 +85,7 @@ func (r *Client) Broadcast(message string) error {
 	return nil
 }
 
+// DoExit instructs the server to immediately exit.
 func (r *Client) DoExit() error {
 	response, err := r.executeWithRetry("DoExit", true)
 	if err != nil {
@@ -88,6 +96,7 @@ func (r *Client) DoExit() error {
 	return nil
 }
 
+// ServerInfo represents the information about the server returned by [Client.Info]().
 type ServerInfo struct {
 	ServerName string
 	Version    string
@@ -95,6 +104,7 @@ type ServerInfo struct {
 
 var infoRegex = regexp.MustCompile(`^Welcome to Pal Server\[v([\d\.]+)\]\s*(.*?)$`)
 
+// Info returns information about the server.
 func (r *Client) Info() (*ServerInfo, error) {
 	response, err := r.executeWithRetry("Info", true)
 	if err != nil {
@@ -110,6 +120,7 @@ func (r *Client) Info() (*ServerInfo, error) {
 	}, nil
 }
 
+// KickPlayer instructs the server to kick the player with the given Steam ID.
 func (r *Client) KickPlayer(steamID uint64) error {
 	response, err := r.executeWithRetry(fmt.Sprintf("KickPlayer %d", steamID), true)
 	if err != nil {
@@ -120,6 +131,7 @@ func (r *Client) KickPlayer(steamID uint64) error {
 	return nil
 }
 
+// Save instructs the server to save the world to disk.
 func (r *Client) Save() error {
 	response, err := r.executeWithRetry("Save", true)
 	if err != nil {
@@ -130,12 +142,14 @@ func (r *Client) Save() error {
 	return nil
 }
 
+// Player is the representation of a single player.
 type Player struct {
 	Name      string
 	PlayerUID uint64
 	SteamID   uint64
 }
 
+// ShowPlayers returns a list of all players that are currently online.
 func (r *Client) ShowPlayers() ([]Player, error) {
 	players := []Player{}
 	response, err := r.executeWithRetry("ShowPlayers", true)
@@ -168,10 +182,13 @@ func (r *Client) ShowPlayers() ([]Player, error) {
 	return players, nil
 }
 
+// Shutdown instructs the server to shut down after the given number of seconds.
 func (r *Client) Shutdown(seconds int) error {
 	return r.shutdown(fmt.Sprintf("%d", seconds))
 }
 
+// ShutdownWithMessage instructs the server to shut down after the given number of seconds. The message will be
+// displayed to all online players.
 func (r *Client) ShutdownWithMessage(seconds int, message string) error {
 	return r.shutdown(fmt.Sprintf("%d %s", seconds, message))
 }
