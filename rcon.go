@@ -31,6 +31,17 @@ func NewClient(address string, password string) *Client {
 	return client
 }
 
+// Close closes the connection to the RCON server. Calling any other method after closing will reopen the connection.
+func (r *Client) Close() error {
+	if r.conn == nil {
+		return nil
+	} else {
+		err := r.conn.Close()
+		r.conn = nil
+		return err
+	}
+}
+
 func (r *Client) connect() error {
 	if r.conn != nil {
 		r.conn.Close()

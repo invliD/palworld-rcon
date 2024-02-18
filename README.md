@@ -21,6 +21,7 @@ import (
 
 func main() {
 	client := palworldrcon.NewClient("127.0.0.1:25575", "password")
+	defer client.Close()
 
 	info, err := client.Info()
 	if err != nil {
