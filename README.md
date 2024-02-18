@@ -1,5 +1,5 @@
 # palworld-rcon
-[![GitHub Build](https://github.com/invliD/palworld-rcon/workflows/build/badge.svg)](https://github.com/invliD/palworld-rcon/actions)
+[![GitHub Build](https://github.com/invliD/palworld-rcon/workflows/Build/badge.svg)](https://github.com/invliD/palworld-rcon/actions)
 [![Go Report Card](https://goreportcard.com/badge/github.com/invliD/palworld-rcon)](https://goreportcard.com/report/github.com/invliD/palworld-rcon)
 
 ## Install
