@@ -13,7 +13,7 @@ import (
 	"github.com/gorcon/rcon"
 )
 
-// Client represents a client to a Palword RCON server.
+// Client represents a client to a Palword RCON server. Only use [NewClient] to instantiate a client.
 type Client struct {
 	address  string
 	password string
