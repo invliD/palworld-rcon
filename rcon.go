@@ -14,6 +14,9 @@ import (
 )
 
 // Client represents a client to a Palword RCON server. Only use [NewClient] to instantiate a client.
+//
+// Available commands are documented at https://tech.palworldgame.com/settings-and-operation/commands#command-list.
+// Not all commands listed there are applicable from RCON.
 type Client struct {
 	address  string
 	password string
